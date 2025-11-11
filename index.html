@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Happy Birthday — Open with sound 🎉</title>
+  <meta name="description" content="A small birthday site — open with sound on for the surprise.">
+  <style>
+    :root{--bg:#0b0f17;--muted:#cbd5e1;--accent:#ff6b6b;--glass:rgba(0,0,0,0.36);--card:#0f1724}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071026 0%, #031022 100%);font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#fff;-webkit-font-smoothing:antialiased}
+    img{max-width:100%;display:block}
+
+    /* ENTRY SCREEN (Canva PNG) */
+    #entry-screen{position:fixed;inset:0;z-index:99999;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px}
+    #entry-screen img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+    #entry-screen .overlay{position:relative;z-index:2;text-align:center}
+    #enterBtn{appearance:none;border:none;padding:12px 18px;border-radius:999px;background:var(--accent);color:#071022;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.6)}
+    #enterHint{margin-top:10px;color:rgba(255,255,255,0.9);font-size:14px}
+
+    /* SITE LAYOUT */
+    #site{display:none}
+    .panel{position:relative;min-height:62vh;display:flex;align-items:center;justify-content:center;padding:40px 18px;overflow:hidden}
+    .panel .bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.03);filter:blur(6px) brightness(0.55);}
+    .panel .content{position:relative;z-index:2;max-width:760px;width:100%;text-align:center;padding:18px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02));backdrop-filter:blur(2px);border:1px solid rgba(255,255,255,0.04)}
+    .content h1{margin:0;font-size:clamp(22px,6vw,34px);line-height:1.05}
+    .content p{color:var(--muted);margin-top:10px;font-size:15px}
+    .small{font-size:13px;color:rgba(255,255,255,0.7);margin-top:8px}
+
+    /* Collage */
+    .collage{padding:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .collage img{width:100%;height:100%;object-fit:cover;border-radius:10px;display:block}
+
+    /* Secret message modal */
+    .modal{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:flex;align-items:center;justify-content:center;padding:20px;z-index:9999;visibility:hidden;opacity:0;transition:opacity .28s ease}
+    .modal.open{visibility:visible;opacity:1}
+    .modal .box{background:linear-gradient(180deg,#071022, #07111b);padding:20px;border-radius:12px;max-width:640px;width:100%;box-shadow:0 8px 40px rgba(3,6,20,0.6);border:1px solid rgba(255,255,255,0.03)}
+    .modal h3{margin:0;font-size:20px}
+    .modal p{color:var(--muted);margin-top:12px}
+    .closeBtn{appearance:none;border:none;background:transparent;color:var(--muted);font-weight:700;cursor:pointer;padding:8px}
+
+    /* Footer */
+    footer{padding:16px;text-align:center;color:rgba(255,255,255,0.6);font-size:13px}
+
+    /* Buttons */
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:var(--accent);color:#071022;font-weight:700;border:none;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+
+    /* Responsive - mobile first */
+    @media(min-width:700px){
+      .collage{grid-template-columns:repeat(5,1fr)}
+      .panel{min-height:72vh;padding:60px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ENTRY SCREEN: use Canva export image here (images/entry.png) -->
+  <div id="entry-screen">
+    <img src="images/entry.png" alt="Happy Birthday" />
+    <div class="overlay">
+      <button id="enterBtn">Enter the Celebration 🎉</button>
+      <div id="enterHint">Tap to enter • enable sound for surprise</div>
+    </div>
+  </div>
+
+  <!-- MAIN SITE -->
+  <div id="site" aria-hidden="true">
+
+    <!-- HERO PANEL (uses first photo as background) -->
+    <section class="panel" id="panel-1">
+      <div class="bg" style="background-image:url('images/1.jpg')" aria-hidden="true"></div>
+      <div class="content">
+        <h1>Happy Birthday, <span style="color:var(--accent)">Sia</span> 🎂</h1>
+        <p class="small">Today is your day.</p>
+        <div style="margin-top:14px">
+          <button id="openSecretBtn" class="btn">Open Message</button>
+          <button id="playAgain" class="btn ghost" style="margin-left:8px">Play Confetti</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHOTO PANELS with text overlay on blur -->
+    <section class="panel" style="--n:2">
+      <div class="bg" style="background-image:url('images/2.jpg')"></div>
+      <div class="content">
+        <h1>You throw weights with your aura wherever you go </h1>
+        <p>You carry warmth in everything you do.</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="bg" style="background-image:url('images/18.jpg')"></div>
+      <div class="content">
+        <h1>You notice what no-one does </h1>
+        <p>You find happiness in small things, and somehow make everyone else do the same..</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="bg" style="background-image:url('images/7.png')"></div>
+      <div class="content">
+        <h1>Your smile, our compass</h1>
+        <p> you make the ordinary magical.</p>
+      </div>
+    </section>
+
+    <!-- Collage Section (images 5-15) -->
+    <section style="padding:18px;background:linear-gradient(180deg,#031022, #071026);">
+      <h2 style="margin:0 0 12px 0;text-align:center">Memories Collage</h2>
+      <div class="collage">
+        <img src="images/3.png" alt="">
+        <img src="images/4.png" alt="">
+        <img src="images/5.png" alt="">
+        <img src="images/6.png" alt="">
+        <img src="images/9.png" alt="">
+        <img src="images/10.png" alt="">
+        <img src="images/11.png" alt="">
+        <img src="images/12.png" alt="">
+        <img src="images/13.png" alt="">
+        <img src="images/17.jpg" alt="">
+        <img src="images/15.png" alt="">
+      </div>
+    </section>
+
+    <footer>
+      <div style="font-size:13px;color:rgba(255,255,255,0.6)">Made with ♥ — open on phone for best experience</div>
+    </footer>
+  </div>
+
+  <!-- SECRET MESSAGE MODAL -->
+  <div id="secretModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="box">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3>Secret Message</h3>
+        <button class="closeBtn" id="closeSecret">CLOSE</button>
+      </div>
+      <p id="secretText" style="margin-top:12px;color:var(--muted);line-height:1.5">
+        You walk into people’s lives and leave them lighter than before. Your compassion is your strength, and your energy is contagious. You have this effortless way of making people smile, even when they don’t feel like it. You read emotions better than most, and still choose to respond with kindness. You are proof that being gentle and strong can exist in the same person.This would be your last year of teenage, enjoy it to the fullest. Have fun and seize the year. God bless you. Happy Birthday sia. ❤️
+      </p>
+      <div style="margin-top:14px;text-align:right">
+        <button id="secretConfetti" class="btn">Celebrate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUDIO (local file) -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="assets/music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- confetti lib -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+  <script>
+    // --------- Basic behavior ---------
+    const entry = document.getElementById('entry-screen');
+    const enterBtn = document.getElementById('enterBtn');
+    const site = document.getElementById('site');
+    const bgMusic = document.getElementById('bgMusic');
+    const openSecretBtn = document.getElementById('openSecretBtn');
+    const secretModal = document.getElementById('secretModal');
+    const closeSecret = document.getElementById('closeSecret');
+    const secretConfetti = document.getElementById('secretConfetti');
+    const playAgain = document.getElementById('playAgain');
+
+    // Enter button: fade entry screen, show site, play music (user gesture)
+    enterBtn.addEventListener('click', function(){
+      entry.style.transition = 'opacity .6s ease';
+      entry.style.opacity = '0';
+      setTimeout(()=> entry.remove(), 650);
+      site.style.display = 'block';
+      site.setAttribute('aria-hidden','false');
+      try{ bgMusic.play().catch(()=>{}); }catch(e){}
+      // small confetti on entry
+      setTimeout(()=> fireConfetti(120), 700);
+    });
+
+    // Secret modal
+    openSecretBtn.addEventListener('click', ()=>{
+      secretModal.classList.add('open');
+      secretModal.setAttribute('aria-hidden','false');
+      // optionally stop scrolling on body
+      document.body.style.overflow = 'hidden';
+    });
+    closeSecret.addEventListener('click', ()=>{
+      secretModal.classList.remove('open');
+      secretModal.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    });
+
+    // Confetti trigger
+    function fireConfetti(particles){
+      confetti({ particleCount: particles||100, spread: 70, origin: { y: 0.6 } });
+    }
+    secretConfetti.addEventListener('click', ()=>{
+      fireConfetti(220);
+    });
+    playAgain.addEventListener('click', ()=> fireConfetti(180));
+
+    // Small accessibility: close modal with ESC
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape' && secretModal.classList.contains('open')){
+        closeSecret.click();
+      }
+    });
+
+    // Optional: lazy load images (desktop only) - simple approach
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // nothing heavy here, images are local. If needed, you can implement IntersectionObserver to lazy load.
+    });
+
+    // --------- HOW TO CUSTOMIZE (quick notes shown in console) ---------
+    console.log('Edit images in /images folder (1.jpg to 15.jpg). Replace images/entry.png with your Canva export. Update assets/music.mp3 with your tune. Edit secret message inside #secretText element.');
+  </script>
+</body>
+</html>
